@@ -211,6 +211,8 @@ else Files = new function () {
 
 		t.innerHTML = '<button onclick="Files.add_file();">Создать файл</button><br>'+
 			'<button onclick="Files.add_dir();">Создать папку</button><br>'+
+			'<button onclick="npm_manager.dialog();">Устновить NPM</button><br>'+
+			//'<button onclick="npm_manager.list();">Открыть список npm</button><br>'+
 			'<button onclick="Files.open_in_os();">Открыть в ОС</button>';
 
 		$pos(t, MOUSE_X, MOUSE_Y);

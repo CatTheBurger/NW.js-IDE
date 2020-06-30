@@ -250,8 +250,11 @@ else IDE = new function () {
 	var clip = nw.Clipboard.get();
 	var gui = require('nw.gui');
 	var os = this.OS = require('os');
-	var shell = this.shell = nw.Shell;
-	// NWW.showDevTools();
+	var shell = this.shell = nw.Shell
+
+
+	NWW.showDevTools();
+	this.version = "0.0.8";
 
 	////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////
@@ -360,7 +363,7 @@ else IDE = new function () {
 	};
 
 	this.set_title = function (name) {
-		$('ide_title').innerHTML = 'NW.js IDE v 0.0.8 - ' + name;
+		$('ide_title').innerHTML = 'NW.js IDE v' + this.version + ' - ' + name;
 	};
 
 	this.focus = function () {
@@ -438,6 +441,7 @@ else IDE = new function () {
 			run = $create('button');
 			run.id = '_btn_run_debug';
 			run.innerHTML = '&#9658;';
+			run.className = "action_panel_button"
 			run.onclick = function (e) {
 				Pages.save_active();
 				Debug.start();
@@ -452,15 +456,17 @@ else IDE = new function () {
 			stop.style.fontSize = '10px';
 			stop.style.cursor = 'pointer';
 			stop.style.display = 'none';
+			stop.className = "action_panel_button";
 
 			stop.onclick = function (e) {
 				Debug.stop();
 			};
 
 			var build = $create('button');
-			build.id = '_btn_build_nw';
+			build.id = '_btnld_nw';
 			build.innerHTML = '⚙';
 			build.style.paddingLeft = build.style.paddingRight = '10px';
+			build.className = "action_panel_button";
 
 			build.onclick = function (e) {
 				Pages.add('pages/compile.html', 'Сборка');
@@ -473,6 +479,7 @@ else IDE = new function () {
 			run = $create('button');
 			run.id = '_btn_run_debug';
 			run.innerHTML = '⚙';
+			run.className = "action_panel_button";
 
 			run.onclick = function (e) {
 				Pages.save_active();
@@ -485,6 +492,7 @@ else IDE = new function () {
 			run.id = '_btn_run_debug';
 			run.innerHTML = '&#9658;';
 			run.title = 'Ctrl+Enter';
+			run.className = "action_panel_button";
 
 			run.onclick = function (e) {
 				Pages.save_active();
@@ -500,6 +508,7 @@ else IDE = new function () {
 			stop.style.fontSize = '10px';
 			stop.style.cursor = 'pointer';
 			stop.style.display = 'none';
+			stop.className = "action_panel_button";
 
 			stop.onclick = function (e) {
 				NodeJS.stop();
@@ -513,6 +522,7 @@ else IDE = new function () {
 			run.id = '_btn_run_debug';
 			run.innerHTML = '&#9658;';
 			run.title = 'Ctrl+Enter';
+			run.className = "action_panel_button";
 
 			run.onclick = function (e) {
 				Pages.save_active();
@@ -528,6 +538,7 @@ else IDE = new function () {
 			stop.style.fontSize = '10px';
 			stop.style.cursor = 'pointer';
 			stop.style.display = 'none';
+			stop.className = "action_panel_button";
 
 			stop.onclick = function (e) {
 				Legacy.stop();
@@ -545,6 +556,7 @@ else IDE = new function () {
 		cons.innerHTML = '&#9776;';
 		cons.style.paddingLeft = cons.style.paddingRight = '10px';
 		cons.onclick = function (e) { Debug.open_close(); };
+		cons.className = "action_panel_button";
 		$('actions').appendChild(cons);
 		/////////////////////////////////////////////////////////////////
 
@@ -554,6 +566,7 @@ else IDE = new function () {
 		term.innerHTML = '&#9850;';
 		term.style.paddingLeft = term.style.paddingRight = '10px';
 		term.onclick = function (e) { Term.open(); };
+		term.className = "action_panel_button";
 		$('actions').appendChild(term);
 		/////////////////////////////////////////////////////////////////
 
@@ -563,6 +576,7 @@ else IDE = new function () {
 		cmd.innerHTML = '&#8646;';
 		cmd.style.paddingLeft = cmd.style.paddingRight = '10px';
 		cmd.onclick = function (e) { Cmd.open(); };
+		cmd.className = "action_panel_button";
 		$('actions').appendChild(cmd);
 		/////////////////////////////////////////////////////////////////
 

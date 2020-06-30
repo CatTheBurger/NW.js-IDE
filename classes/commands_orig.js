@@ -81,23 +81,28 @@ else Cmd = new function () {
 		exe.stdin.setEncoding('utf-8');
 
 		exe.stdout.on('data', function (data) {
+			document.getElementsByClassName("cmd_output")[0].innerText = proc(data);
 			Debug.msg(proc(data));
 		});
 
 		exe.stderr.on('data', function (data) {
+			document.getElementsByClassName("cmd_output")[0].innerText = proc(data);
 			Debug.msg(proc(data));
 		});
 
 		exe.on('message', function (data) {
+			document.getElementsByClassName("cmd_output")[0].innerText = proc(data);
 			Debug.msg(proc(data));
 		});
 
 		exe.on('close', function (data) {
+			document.getElementsByClassName("cmd_output")[0].innerText = proc(data);
 			Debug.msg('Процесс остановлен. Код выхода '+data);
 			exe = null;
 		});
 
 		exe.on('error', function (data) {
+			document.getElementsByClassName("cmd_output")[0].innerText = "Error";
 			Debug.err('Ошибка запуска '+data.toString().replace(/spawn/, 'команда').replace(/ENOENT/, 'не найдена').replace(/Error/, ''));
 			exe = null;
 		});
@@ -112,7 +117,7 @@ else Cmd = new function () {
 				<div style="flex: 1; padding: 0 10px;">
 					%project_path% - путь к проекту<br>
 					%active_file% - путь к файлу из текущей вкладки<br>
-					
+
 				</div>
 			</div>
 			<br>
@@ -168,6 +173,7 @@ else Cmd = new function () {
 			<div style="margin-top: 5px; display: flex; flex-direction: column; align-items: stretch; height: 90%;">
 				<div class="cmd_list" id="_cmd_list"></div>
 				<div class="cmd_line"><input id="_cmd_line" type="text" style="flex: 1;"><button id="_cmd_stop" class="btn_pad">&#9209;</button><button id="_cmd_run" class="btn_pad">&#9658;</button></div>
+				<div class="cmd_output"></div>
 			</div>
 		`;
 		$append(panel);

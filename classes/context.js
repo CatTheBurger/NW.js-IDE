@@ -3,10 +3,14 @@ var Context = new function () {
 	var area = null;
 
 	var basic = [
+		{ name : 'br' },
 		{ name : 'Вырезать',  clb : function () { CUT(); }, inline : true },
+		{ name : 'br' },
 		{ name : 'Копировать',  clb : function () { COPY(); }, inline : true },
 		{ name : 'br' },
-		{ name : 'Вставить',  clb : function () { PASTE(); }, inline : true }
+		{ name : 'Вставить',  clb : function () { PASTE(); }, inline : true },
+		{ name : 'br' },
+		{ name : 'Открыть док',  clb : function () { OPEN_DOCS(); }, inline : true }
 	];
 
 	// RUN EVENT ////////////////////////////////////////////////////

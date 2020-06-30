@@ -246,7 +246,9 @@ button:hover, .btn:hover {
 	color: white;
 }
 
-
+.resizer {
+	background-color: #2a2a2a;
+}
 
 /* Files */
 

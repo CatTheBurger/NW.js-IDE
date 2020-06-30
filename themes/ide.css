@@ -10,10 +10,21 @@
 	outline: none;
 }
 
+.table {
+	color: white;
+}
+
 body {
 	width: 100vw;
 	height: 100vh;
 	overflow: hidden;
+	font-family: Ubt;
+}
+
+.resizer {
+    cursor: ew-resize;
+    height: 100%;
+    width: 2px;
 }
 
 .site {
@@ -24,7 +35,6 @@ body {
 input, select, textarea {
 	padding: 2px 4px;
 }
-
 
 /* BUTTONS */
 
@@ -152,6 +162,7 @@ pre {
 	display: flex;
 	flex-direction: column;
 	width: 100%;
+	min-width: 400px;
 }
 
 
@@ -185,6 +196,11 @@ pre {
 
 .actions_panel {
 	display: flex;
+}
+
+.action_panel_button {
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 
 .system_actions {
@@ -245,6 +261,8 @@ pre {
 
 .tab {
 	padding: 3px 6px;
+	padding-left: 6px;
+	padding-right: 6px;
 	border: none;
 	cursor: pointer;
 	display: inline-block;
@@ -597,9 +615,3 @@ pre {
 .as_flex .flex {
 	flex: 1;
 }
-
-
-
-
-
-

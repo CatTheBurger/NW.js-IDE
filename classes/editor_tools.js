@@ -63,7 +63,12 @@ var Tools = new function () {
 
 			if ((m = d.match(/(var|let|const)?[\t\s]?(.*?)=.*?function/))) m = m[2];
 				else if ((m = d.match(/function[\s\t](.*?)[\s\t]?\(/))) m = m[1];
-					else return;
+					else if ((m = d.match(/(var|let|const)?[\t\s]?(.*?)=.*?=>/))) m = m[2];
+						else return;
+
+
+			console.log("DEBUG " + d);
+			console.log("DEBUG " + m);
 
 			var r = $create('div');
 			r.dataset['line'] = parseInt(i)+1;
@@ -76,6 +81,55 @@ var Tools = new function () {
 				$remove(cnt);
 			};
 			cnt.appendChild(r);
+		});
+		$append(back);
+		$append(cnt);
+		cnt.style.left = window.innerWidth - cnt.offsetWidth + 'px';
+	};
+
+	var list_variables = function(data) {
+		var back = $create('div');
+		back.className = 'dialog_back';
+		back.onclick = function () {
+			FOCUS();
+			$remove(back);
+			$remove(cnt);
+		};
+
+		var cnt = $create('div');
+		cnt.className = 'editor_tool';
+
+		var title = $create('div');
+		title.className = 'tool_title';
+		title.innerHTML = 'Список переменных';
+		$append(title, cnt);
+
+		data = data.split(/\n/);
+		_for(data, function (d, i) {
+			var m;
+			if (!(d = d.trim())) return;
+
+			if (!(d.match(/(var|let|const)?[\t\s]?(.*?)=.*?=>/))) {
+				if ((m = d.match(/(var|let)?[\t\s]?(.*?)=/))) m = m[2];
+				else return;
+			}
+
+			console.log("DEBUG " + d);
+			console.log("DEBUG " + m);
+
+			if (m != undefined){
+				var r = $create('div');
+				r.dataset['line'] = parseInt(i)+1;
+				r.innerHTML = m;
+				r.className = 'btn btn_pad';
+				r.onclick = function () {
+					editor.gotoLine(this.dataset['line']);
+					FOCUS();
+					$remove(back);
+					$remove(cnt);
+				};
+				cnt.appendChild(r);
+			}
 		});
 		$append(back);
 		$append(cnt);
@@ -101,7 +155,7 @@ var Tools = new function () {
 		// noinspection JSAnnotator
 		cnt.innerHTML += `
 			<div class="btn_pad">
-				После интеграции в корне проекта появится файл ui.js, который потребуется подключить 
+				После интеграции в корне проекта появится файл ui.js, который потребуется подключить
 				к документу.
 			</div>
 			<button id="_ui_integrate" class="btn_pad full">Интегрировать ui.js</button>
@@ -121,9 +175,9 @@ var Tools = new function () {
 			<br>
 			<div class="btn_pad">
 				Подсказки ко встроенным методам, компонентам, службам и т.д.
-			</div>			
+			</div>
 			<div id="_ui_methods"></div>
-			
+
 		`;
 
 		var _repl = function (text) {
@@ -201,6 +255,7 @@ var Tools = new function () {
 		if (type === 'list_cats') return list_cats(data);
 		if (type === 'list_funcs') return list_funcs(data);
 		if (type === 'list_ui') return list_ui();
+		if (type === 'list_variables') return list_variables(data);
 	};
 
 };

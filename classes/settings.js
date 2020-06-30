@@ -5,7 +5,7 @@ else Sett = new function () {
 	var settings = {
 		ide_theme : 'ide_violet',
 		editor_theme : 'nwjside',
-		editor_tab_size : 2,
+		editor_tab_size : 4,
 		editor_use_soft_tabs : true,
 		editor_font_size : 14
 	};

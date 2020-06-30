@@ -24,6 +24,9 @@
 	<script src="classes/session.js"></script>
 	<script src="classes/commands.js"></script>
 	<script src="classes/joint.js"></script>
+	<script src="classes/updater.js"></script>
+    <script src="classes/find_usage.js"></script>
+	<script src="classes/npm_manager.js"></script>
 
 	<title>NW.js IDE</title>
 </head>
@@ -33,12 +36,22 @@
 		<span class="btn" title="{new_project}" onclick="Dial.new_project();">Новый</span>
 		<span class="btn" onclick="Dial.open_project();">Открыть</span>
 		<span class="btn" onclick="Dial.re_type_project();">Опции</span>
+		<span id="system_actions">
+			<button title="Скрыть просмотров файлов" onclick="this.innerHTML = Files.sh() ? '&#9668;' : '&#9658;'" class="action_panel_button btn" >&#9668;</button>
+			<button title="Сохранить" onclick="Pages.save_active();" class="action_panel_button btn">Сохранить</button>
+			<button title="Восстановить" onclick="Pages.restore_active();" class="action_panel_button btn">Восстановить</button>
+		</span>
 		<!--<span class="btn" onclick="Dial.project_templates();">Шаблоны</span>-->
 	</div>
 	<div id="ide_title" class="drag_window">NW.js IDE</div>
 	<div id="menu_system" class="menu_system">
 		<span class="btn" onclick="Pages.add('pages/about.html', 'Справка')">Справка</span>
 		<span class="btn" onclick="Pages.add('pages/settings.html', 'Настройки')">Настройки</span>
+
+		<span id="actions" class="actions">
+
+		</span>
+
 		<span class="btn" onclick="IDE.min();">&mdash;</span>
 		<span class="btn" onclick="IDE.full();"><span style="display:inline-block;border:1px solid;padding:3px 3px"></span></span>
 		<span class="btn ide_close" onclick="IDE.close();">&#10006;</span>
@@ -46,16 +59,17 @@
 </div>
 <div id="main" class="main">
 	<div id="files" class="files"></div>
+	<div class="resizer" id="resizer"></div>
 	<div id="framebox" class="framebox">
 		<div class="actions_panel">
-			<span id="system_actions">
-				<button title="{hide}" onclick="this.innerHTML = Files.sh() ? '&#9668;' : '&#9658;'">&#9668;</button>
-				<button title="{save}" onclick="Pages.save_active();">Сохранить</button>
-				<button title="{restore}" onclick="Pages.restore_active();">Восстановить</button>
+			<!--<span id="system_actions">
+				<button title="Скрыть просмотров файлов" onclick="this.innerHTML = Files.sh() ? '&#9668;' : '&#9658;'" class="action_panel_button">&#9668;</button>
+				<button title="Сохранить" onclick="Pages.save_active();" class="action_panel_button">Сохранить</button>
+				<button title="Восстановить" onclick="Pages.restore_active();" class="action_panel_button">Восстановить</button>
 			</span>
 			<span id="actions" class="actions">
 
-			</span>
+			</span>-->
 		</div>
 		<div id="tabs" class="tabs"></div>
 		<div id="frames" class="frames"></div>
@@ -70,6 +84,7 @@
 	IDE.init();
 	Sett.load();
 	Lang.init();
+	Updater.checkForUpdates();
 
 	// RUN EVENT ////////////////////////////////////////////////////
 	Events.run('app:init', W);
@@ -78,6 +93,65 @@
 	// LOAD THEME ///////////////////////////////////////////////////
 	$set_theme(Sett.get('ide_theme'));
 	/////////////////////////////////////////////////////////////////
+
+	var resizer = document.getElementById("resizer");
+	var leftSide = resizer.previousElementSibling;
+    var rightSide = resizer.nextElementSibling;
+	document.getElementById("files").style.width = Sett.get("file_size");
+
+    var x = 0;
+    var y = 0;
+    var leftWidth = 0;
+
+    var mouseDownHandler = function(e) {
+        x = e.clientX;
+        y = e.clientY;
+        leftWidth = leftSide.getBoundingClientRect().width;
+
+        document.addEventListener('mousemove', mouseMoveHandler);
+        document.addEventListener('mouseup', mouseUpHandler);
+    };
+
+    var mouseMoveHandler = function(e) {
+        // How far the mouse has been moved
+        const dx = e.clientX - x;
+        const dy = e.clientY - y;
+
+        const newLeftWidth = (leftWidth + dx) * 100 / resizer.parentNode.getBoundingClientRect().width;
+        leftSide.style.width = `${newLeftWidth}%`;
+
+        resizer.style.cursor = 'col-resize';
+        document.body.style.cursor = 'col-resize';
+
+        leftSide.style.userSelect = 'none';
+        leftSide.style.pointerEvents = 'none';
+
+        rightSide.style.userSelect = 'none';
+        rightSide.style.pointerEvents = 'none';
+    };
+
+    var mouseUpHandler = function() {
+        resizer.style.removeProperty('cursor');
+        document.body.style.removeProperty('cursor');
+
+		Sett.set("file_size", document.getElementById("files").style.width);
+		Sett.save();
+
+        leftSide.style.removeProperty('user-select');
+        leftSide.style.removeProperty('pointer-events');
+
+        rightSide.style.removeProperty('user-select');
+        rightSide.style.removeProperty('pointer-events');
+
+        document.removeEventListener('mousemove', mouseMoveHandler);
+        document.removeEventListener('mouseup', mouseUpHandler);
+    };
+
+    resizer.addEventListener('mousedown', mouseDownHandler);
+
+	// nw.Window.open("pages/project_manager.html",{}, function(win) {
+	//
+	// });
 </script>
 </body>
 </html>

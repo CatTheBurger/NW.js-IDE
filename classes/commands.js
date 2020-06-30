@@ -79,18 +79,26 @@ else Cmd = new function () {
 		exe.stdin.setEncoding('utf-8');
 
 		exe.stdout.on('data', function (data) {
+			document.getElementsByClassName("cmd_output")[0].innerText += data;
+			document.getElementsByClassName("cmd_output")[0].innerText += ">>>";
 			Debug.msg(proc(data));
 		});
 
 		exe.stderr.on('data', function (data) {
+			document.getElementsByClassName("cmd_output")[0].innerText += data;
+			document.getElementsByClassName("cmd_output")[0].innerText += ">>>";
 			Debug.msg(proc(data));
 		});
 
 		exe.on('message', function (data) {
+			document.getElementsByClassName("cmd_output")[0].innerText += data;
+			document.getElementsByClassName("cmd_output")[0].innerText += ">>>";
 			Debug.msg(proc(data));
 		});
 
 		exe.on('close', function (data) {
+			document.getElementsByClassName("cmd_output")[0].innerText += data;
+			document.getElementsByClassName("cmd_output")[0].innerText += ">>>";
 			Debug.msg('Процесс остановлен. Код выхода '+(data || 0));
 			exe = null;
 		});
@@ -107,10 +115,10 @@ else Cmd = new function () {
 		var cnt = `
 			<div style="display: flex;">
 				<textarea wrap="off" id="_cmd_edit_list" cols="50" rows="15"></textarea>
-				<div style="flex: 1; padding: 0 10px;">
+				<div style="flex: 1; padding: 0 10px;" class="font">
 					%project_path% - путь к проекту<br>
 					%active_file% - путь к файлу из текущей вкладки<br>
-					
+
 				</div>
 			</div>
 			<br>
@@ -166,6 +174,7 @@ else Cmd = new function () {
 			<div style="margin-top: 5px; display: flex; flex-direction: column; align-items: stretch; height: 90%;">
 				<div class="cmd_list" id="_cmd_list"></div>
 				<div class="cmd_line"><input id="_cmd_line" type="text" style="flex: 1;"><button id="_cmd_stop" class="btn_pad">&#9209;</button><button id="_cmd_run" class="btn_pad">&#9658;</button></div>
+				<div class="cmd_output"></div>
 			</div>
 		`;
 		$append(panel);

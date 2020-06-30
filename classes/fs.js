@@ -18,6 +18,7 @@ if (typeof parent.Fs !== 'undefined') Fs = parent.Fs;
 else Fs = new function () {
 	var _Fs = this;
 	var fs = require('fs');
+	var _path = require('path');
 
 	this.delm = delm;
 	this.p = p;
@@ -125,7 +126,7 @@ else Fs = new function () {
 		}
 	};
 
-	this.read_file = function (path, flag) {
+	this.read_file = function (path, flag = "") {
 		path = dp(path);
 		if (!_Fs.is_file(path)) return '';
 		if (flag === 'json') {
@@ -158,6 +159,10 @@ else Fs = new function () {
 	this.open_on_os = function (folder) {
 		IDE.shell.openItem(folder);
 	};
+
+	this.dirname = function(path) {
+		return _path.dirname(path);
+	}
 
 	this.download = function (url, into, clb_progress, clb_success, clb_error) {
 		var http = require('http');
@@ -205,8 +210,19 @@ else Fs = new function () {
 		}
 	};
 
+	this.get_size = function(path) {
+		return (fs.statSync(path).size / 1024).toFixed(2);
+	}
 
+	this.get_type = function (path) {
+		return _path.extname(path);
+	}
 
+	this.get_dir = function(path) {
+		return _path.dirname(path);
+	}
 
+	this.move = function(from, to) {
 
+	}
 };

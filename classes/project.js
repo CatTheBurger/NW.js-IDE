@@ -77,9 +77,9 @@ else Project = new function () {
 		this.name = sett['name'];
 
 		if (sett['type'] === 'nw') {
+			Fs.write_file(sett['dir']+'/package.json', Fs.read_file('templates/nw/package.json'));
 			project_ide.open_pages['pages/editor.html#'+sett['dir']+'/index.html'] = 'index.html';
 			project_ide.active_page = 'pages/editor.html#'+sett['dir']+'/index.html';
-			Fs.write_file(sett['dir']+'/package.json', Fs.read_file('templates/nw/package.json'));
 			Fs.write_file(sett['dir']+'/index.html', Fs.read_file('templates/nw/index.html'));
 		} else if (sett['type'] === 'nwui') {
 			Fs.write_file(sett['dir']+'/package.json', Fs.read_file('templates/nwui/package.json'));

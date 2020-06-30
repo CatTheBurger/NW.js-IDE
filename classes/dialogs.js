@@ -65,6 +65,7 @@ else Dial = new function () {
 	this.color = function (clb, old_color) {
 		var i = $create('input');
 		i.type = 'color';
+		i.draggable = 'true';
 
 		if (old_color)
 			i.value = old_color.length < 7 ? '#'+old_color : old_color;
@@ -289,7 +290,7 @@ else Dial = new function () {
 	};
 
 	this.del_file = function (path) {
-		var cnt = 'Вы действительно хотите удалить файл?<br><b>'+path+'</b>';
+		var cnt = '<p class="font">Вы действительно хотите удалить файл?</p><br><p class="font">'+path+'</p>';
 		cnt += '<br><br><div align="center"><button id="_del_btn" class="btn_red btn_pad">Удалить</button></div>';
 		dialog('Удалить файл?', cnt, 'auto', 'auto');
 		$('_del_btn').onclick = function () {
@@ -303,7 +304,7 @@ else Dial = new function () {
 	};
 
 	this.need_restart = function () {
-		var cnt = 'Для продолжения необходимо перезагрузить IDE. Перезагрузить сейчас?<br>';
+		var cnt = '<p class="font">Для продолжения необходимо перезагрузить IDE. Перезагрузить сейчас?</p><br>';
 		cnt += '<br><br><div align="center"><button id="_del_btn" class="btn_pad">Перезагрузить</button></div>';
 		dialog('Требуется перезагрузка', cnt, 'auto', 'auto');
 		$('_del_btn').onclick = function () {
@@ -314,7 +315,7 @@ else Dial = new function () {
 	this.rename = function (path) {
 		// noinspection JSAnnotator
 		var cnt = `
-			Введите новое название
+			<p class="font">Введите новое название</p>
 			<br>
 			<input class="full_width" type="text" value="`+path+`" id="new_name">
 			<br><br>
@@ -339,7 +340,7 @@ else Dial = new function () {
 	this.duplicate = function (path) {
 		// noinspection JSAnnotator
 		var cnt = `
-			Введите имя дублируемого файла
+			<p class="font">Введите имя дублируемого файла</p>
 			<br>
 			<input class="full_width" type="text" value="`+path+`" id="new_name">
 			<br><br>
@@ -356,8 +357,8 @@ else Dial = new function () {
 	};
 
 	this.del_dir = function (path) {
-		var cnt = 'Вы действительно хотите удалить папку?<br><b>'+path+'</b>';
-		cnt += '<br><br><input type="checkbox" id="_as_no_empty"> Удалить даже если не пустая';
+		var cnt = '<p class="font">Вы действительно хотите удалить папку?</p><br><b><p class="font">'+path+'</p></b>';
+		cnt += '<br><br><input type="checkbox" id="_as_no_empty" class="font"> <p class="font">Удалить даже если не пустая</p>';
 		cnt += '<br><br><div align="center"><button id="_del_btn" class="btn_red btn_pad">Удалить</button></div>';
 		dialog('Удалить папку?', cnt, 'auto', 'auto');
 		$('_del_btn').onclick = function () {
@@ -404,6 +405,49 @@ else Dial = new function () {
 		};
 	};
 
+	this.propetries = function(path) {
+		var cnt = `
+			<table class="font" style="width: 300px;">
+				<p>` + (Fs.is_dir(path) ? "Папка" : "Тип файла") + ` ` + Fs.get_type(path) + `</p>
+				<br>
+				<p>Размер ` + (Fs.is_dir(path) ? "папки" : "файла") + ` ` + Fs.get_size(path) + ` мб</p>
+				<br>
+				<p>Папка хранения ` + Fs.get_dir(path) + `</p>
+				<br>
+				<div align="center">
+					<button class="btn_pad" onclick="Dial.close();">Ок</button>
+				</div>
+			</table>
+		`;
+		dialog('Новый проект', cnt, 'auto', 'auto');
+	};
+
+	this.find_usage = function(path) {
+		// var file_name = Fs.parse(path).name;
+		// console.log("path = " + file_name);
+		//
+		// var usages = usage_search.find_file_usage(path, Fs.get_dir(path));
+		// var cnt = `
+		// 	<table class="font" style="width: 500px;">
+		// 	`;
+		//
+		// if(usages.length === 0) return;
+		//
+		// for(var i = 0;i < usages.length;i++) {
+		// 	console.log( Fs.dirname(path) + "/" + usages[i]);
+		// 	cnt += "<p>" + file_name + " найден в файле " + usages[i] + '</p><button class="btn_pad" onclick="Pages.add(`' + Fs.dirname(path) + "/" + usages[i] + '`,`' + usages[i] + '`)">Открыть файл</button><br>';
+		// 	console.log("<p>" + file_name + " найден в файле " + usages[i] + '<button class="btn_pad" onclick="Pages.add(`' + Fs.dirname(path) + "/" + usages[i] + '`,`' + usages[i] + '`)">Открыть файл</button><br>');
+		// 	//Pages.add("/home/artem/Документы/TestProject/index.html", "index.html");
+		// }
+		//
+		// cnt += `</table>
+		// <div align="center">
+		// 	<button class="btn_pad" onclick="Dial.close();">Ок<button>
+		// </div>`;
+		//
+		// dialog('Использования', cnt, 'auto', 'auto');
+	};
+
 	this.files_item_menu = function (el, path, type) {
 		var b = back(true);
 		var fm = $create('div');
@@ -419,12 +463,27 @@ else Dial = new function () {
 			$button(fm, 'Удалить', function (e) {
 				Dial.del_file(path);
 			}, true, 'full_width files_item_close');
+			$button(fm, 'Вырезать', function (e) {
+				Dial.propetries(path);
+			}, true, 'full_width files_item_close');
+			$button(fm, 'Копировать', function (e) {
+				Dial.propetries(path);
+			}, true, 'full_width files_item_close');
+			$button(fm, 'Найти использования', function (e) {
+				Dial.find_usage(path);
+			}, true, 'full_width files_item_close');
+			$button(fm, 'Свойства', function (e) {
+				Dial.propetries(path);
+			}, true, 'full_width files_item_close');
 		} else {
 			$button(fm, 'Переименовать', function (e) {
 				Dial.rename(path);
 			}, true, 'full_width');
 			$button(fm, 'Удалить', function (e) {
 				Dial.del_dir(path);
+			}, true, 'full_width files_item_close');
+			$button(fm, 'Свойства', function (e) {
+				Dial.propetries(path);
 			}, true, 'full_width files_item_close');
 		}
 
